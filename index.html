@@ -248,6 +248,64 @@
   }
 
 
+
+
+  @media (max-width: 460px) and (min-height: 780px) and (orientation: portrait) {
+    .heart-wrap {
+      padding-bottom: 0.70em;
+      min-width: 2.25em;
+      min-height: 2.70em;
+    }
+
+    .heart {
+      font-size: 2.24em;
+      text-shadow:
+        0 0 22px rgba(255, 211, 225, 0.34),
+        0 0 48px rgba(151, 8, 40, 0.38),
+        0 0 84px rgba(71, 0, 17, 0.32);
+    }
+
+    .blood-drip {
+      top: 1.92em;
+      width: 0.14em;
+      height: 0.56em;
+    }
+
+    .blood-drip.drip-left {
+      margin-left: -0.34em;
+      height: 0.48em;
+    }
+
+    .blood-drip.drip-right {
+      margin-left: 0.36em;
+      height: 0.62em;
+    }
+
+    .blood-drop {
+      top: 2.34em;
+      width: 0.28em;
+      height: 0.38em;
+      filter: drop-shadow(0 0 11px rgba(122, 0, 30, 0.44));
+    }
+
+    .blood-drop.drop-left {
+      margin-left: -0.34em;
+      width: 0.22em;
+      height: 0.30em;
+    }
+
+    .blood-drop.drop-main {
+      width: 0.28em;
+      height: 0.40em;
+    }
+
+    .blood-drop.drop-right {
+      margin-left: 0.36em;
+      width: 0.24em;
+      height: 0.33em;
+    }
+  }
+
   @keyframes heartAppear {
     0% { opacity: 0; filter: blur(8px); transform: scale(0.76); }
     55% { opacity: 1; filter: blur(0); transform: scale(1.07); }
@@ -337,7 +395,7 @@
 </div>
 
 <script>
-const MESSAGE = 'ты моя маленькая любимая вредина такая нежная как пушистый котенок кусаю тебя';
+const MESSAGE = 'ты моя маленькая любимая вредина, такая нежная, как пушистый котенок';
 
 const starsCanvas = document.getElementById('stars');
 const starsCtx = starsCanvas.getContext('2d', { alpha: true });
