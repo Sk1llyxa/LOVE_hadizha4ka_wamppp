@@ -9,6 +9,8 @@
     margin: 0;
     width: 100%;
     height: 100%;
+    min-height: 100dvh;
+    min-height: 100dvh;
     overflow: hidden;
     background: #000;
     font-family: monospace;
@@ -17,7 +19,7 @@
   body {
     position: relative;
     background:
-      radial-gradient(circle at 50% 45%, rgba(36, 0, 12, 0.14) 0%, rgba(12, 0, 4, 0.06) 38%, rgba(0, 0, 0, 0) 78%),
+      radial-gradient(circle at 50% 48%, rgba(72, 0, 18, 0.22) 0%, rgba(38, 0, 12, 0.12) 28%, rgba(10, 0, 4, 0.06) 48%, rgba(0, 0, 0, 0) 76%),
       #000;
   }
 
@@ -29,6 +31,21 @@
 
   #stars { z-index: 0; }
   #rain { z-index: 1; }
+
+  #mist-layer {
+    position: fixed;
+    inset: -14vmax;
+    z-index: 3;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(128, 0, 28, 0.34) 0%, rgba(104, 0, 24, 0.26) 16%, rgba(82, 0, 18, 0.18) 28%, rgba(46, 0, 12, 0.10) 40%, rgba(0, 0, 0, 0) 64%),
+      radial-gradient(circle at 50% 50%, rgba(210, 26, 62, 0.14) 0%, rgba(126, 0, 30, 0.10) 22%, rgba(0, 0, 0, 0) 50%),
+      radial-gradient(circle at 50% 50%, rgba(255, 114, 146, 0.06) 0%, rgba(0, 0, 0, 0) 34%);
+    filter: blur(24px) saturate(118%);
+    opacity: 0.98;
+    transform: translateZ(0);
+  }
+
 
   #text-layer {
     position: fixed;
@@ -257,12 +274,13 @@
 <body>
 <canvas id="stars"></canvas>
 <canvas id="rain"></canvas>
+<div id="mist-layer" aria-hidden="true"></div>
 <div id="text-layer">
   <div id="word-box"></div>
 </div>
 
 <script>
-const MESSAGE = 'ты моя маленькая любимая вредина такая нежная как пушистый котенок хаваю тебя';
+const MESSAGE = 'ты моя маленькая любимая вредина, такая нежная, как пушистый котенок';
 
 const starsCanvas = document.getElementById('stars');
 const starsCtx = starsCanvas.getContext('2d', { alpha: true });
@@ -379,9 +397,10 @@ function createStarField() {
   const ctx = c.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const bg = ctx.createRadialGradient(width * 0.5, height * 0.45, 0, width * 0.5, height * 0.45, Math.max(width, height) * 0.8);
-  bg.addColorStop(0, 'rgba(40, 0, 14, 0.16)');
-  bg.addColorStop(0.4, 'rgba(14, 0, 6, 0.06)');
+  const bg = ctx.createRadialGradient(width * 0.5, height * 0.5, 0, width * 0.5, height * 0.5, Math.max(width, height) * 0.78);
+  bg.addColorStop(0, 'rgba(86, 0, 20, 0.22)');
+  bg.addColorStop(0.22, 'rgba(58, 0, 16, 0.14)');
+  bg.addColorStop(0.48, 'rgba(18, 0, 8, 0.07)');
   bg.addColorStop(1, 'rgba(0, 0, 0, 0)');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
