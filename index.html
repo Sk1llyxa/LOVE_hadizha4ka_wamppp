@@ -191,6 +191,63 @@
     animation: dropFallSmall 4.0s ease-in-out 3.45s infinite;
   }
 
+  @media (max-width: 768px), (max-height: 900px) and (orientation: portrait) {
+    .heart-wrap {
+      padding-bottom: 0.56em;
+      min-width: 1.75em;
+      min-height: 2.05em;
+    }
+
+    .heart {
+      font-size: 1.72em;
+      text-shadow:
+        0 0 18px rgba(255, 211, 225, 0.30),
+        0 0 40px rgba(151, 8, 40, 0.34),
+        0 0 70px rgba(71, 0, 17, 0.28);
+    }
+
+    .blood-drip {
+      top: 1.48em;
+      width: 0.12em;
+      height: 0.42em;
+    }
+
+    .blood-drip.drip-left {
+      margin-left: -0.27em;
+      height: 0.36em;
+    }
+
+    .blood-drip.drip-right {
+      margin-left: 0.29em;
+      height: 0.48em;
+    }
+
+    .blood-drop {
+      top: 1.82em;
+      width: 0.22em;
+      height: 0.30em;
+      filter: drop-shadow(0 0 9px rgba(122, 0, 30, 0.40));
+    }
+
+    .blood-drop.drop-left {
+      margin-left: -0.27em;
+      width: 0.18em;
+      height: 0.24em;
+    }
+
+    .blood-drop.drop-main {
+      width: 0.22em;
+      height: 0.32em;
+    }
+
+    .blood-drop.drop-right {
+      margin-left: 0.29em;
+      width: 0.19em;
+      height: 0.27em;
+    }
+  }
+
+
   @keyframes heartAppear {
     0% { opacity: 0; filter: blur(8px); transform: scale(0.76); }
     55% { opacity: 1; filter: blur(0); transform: scale(1.07); }
