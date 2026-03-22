@@ -101,8 +101,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 0.42em;
-    min-width: 1.2em;
+    padding-bottom: 0.50em;
+    min-width: 1.42em;
     min-height: 1.45em;
   }
 
@@ -121,7 +121,7 @@
     animation:
       heartAppear 2.0s ease forwards,
       heartPulse 2.6s ease-in-out 2.0s infinite;
-    font-size: 1.18em;
+    font-size: 1.34em;
     line-height: 1;
     transform-origin: center;
     will-change: opacity, transform, filter;
@@ -193,13 +193,13 @@
 
   @media (max-width: 768px), (max-height: 900px) and (orientation: portrait) {
     .heart-wrap {
-      padding-bottom: 0.66em;
-      min-width: 2.05em;
-      min-height: 2.38em;
+      padding-bottom: 0.74em;
+      min-width: 2.34em;
+      min-height: 2.64em;
     }
 
     .heart {
-      font-size: 2.08em;
+      font-size: 2.34em;
       text-shadow:
         0 0 18px rgba(255, 211, 225, 0.30),
         0 0 40px rgba(151, 8, 40, 0.34),
@@ -252,13 +252,13 @@
 
   @media (max-width: 460px) and (min-height: 780px) and (orientation: portrait) {
     .heart-wrap {
-      padding-bottom: 0.86em;
-      min-width: 2.85em;
-      min-height: 3.35em;
+      padding-bottom: 1.12em;
+      min-width: 3.18em;
+      min-height: 3.74em;
     }
 
     .heart {
-      font-size: 2.92em;
+      font-size: 3.24em;
       text-shadow:
         0 0 22px rgba(255, 211, 225, 0.34),
         0 0 48px rgba(151, 8, 40, 0.38),
@@ -309,57 +309,57 @@
 
   @media (max-width: 430px) and (min-height: 830px) and (orientation: portrait) {
     .heart-wrap {
-      padding-bottom: 0.98em;
-      min-width: 3.15em;
-      min-height: 3.75em;
+      padding-bottom: 1.12em;
+      min-width: 3.55em;
+      min-height: 4.22em;
     }
 
     .heart {
-      font-size: 3.26em;
+      font-size: 3.62em;
       text-shadow:
-        0 0 24px rgba(255, 211, 225, 0.36),
-        0 0 56px rgba(151, 8, 40, 0.42),
-        0 0 96px rgba(71, 0, 17, 0.34);
+        0 0 28px rgba(255, 211, 225, 0.38),
+        0 0 68px rgba(151, 8, 40, 0.46),
+        0 0 116px rgba(71, 0, 17, 0.38);
     }
 
     .blood-drip {
-      top: 2.78em;
-      width: 0.19em;
-      height: 0.84em;
+      top: 3.02em;
+      width: 0.20em;
+      height: 0.92em;
     }
 
     .blood-drip.drip-left {
-      margin-left: -0.47em;
-      height: 0.70em;
+      margin-left: -0.52em;
+      height: 0.76em;
     }
 
     .blood-drip.drip-right {
-      margin-left: 0.49em;
-      height: 0.94em;
+      margin-left: 0.54em;
+      height: 1.04em;
     }
 
     .blood-drop {
-      top: 3.34em;
-      width: 0.38em;
-      height: 0.54em;
+      top: 3.62em;
+      width: 0.42em;
+      height: 0.60em;
       filter: drop-shadow(0 0 13px rgba(122, 0, 30, 0.46));
     }
 
     .blood-drop.drop-left {
-      margin-left: -0.47em;
-      width: 0.30em;
-      height: 0.42em;
+      margin-left: -0.52em;
+      width: 0.33em;
+      height: 0.46em;
     }
 
     .blood-drop.drop-main {
-      width: 0.38em;
-      height: 0.58em;
+      width: 0.43em;
+      height: 0.66em;
     }
 
     .blood-drop.drop-right {
-      margin-left: 0.49em;
-      width: 0.31em;
-      height: 0.44em;
+      margin-left: 0.54em;
+      width: 0.34em;
+      height: 0.48em;
     }
   }
 
@@ -452,7 +452,7 @@
 </div>
 
 <script>
-const MESSAGE = 'ты моя маленькая любимая вредина, такая нежная как пушистый котенок которого я кусаю';
+const MESSAGE = 'ты моя маленькая любимая вредина такая нежная как пушистый котенок у которой самые красивые глазки кусаю тебя';
 
 const starsCanvas = document.getElementById('stars');
 const starsCtx = starsCanvas.getContext('2d', { alpha: true });
