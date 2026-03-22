@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Perfect Beauty Matrix</title>
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: monospace;
+  }
+
+  body {
+    position: relative;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(36, 0, 12, 0.14) 0%, rgba(12, 0, 4, 0.06) 38%, rgba(0, 0, 0, 0) 78%),
+      #000;
+  }
+
+  canvas {
+    position: fixed;
+    inset: 0;
+    display: block;
+  }
+
+  #stars { z-index: 0; }
+  #rain { z-index: 1; }
+
+  #text-layer {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  #word-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.45em;
+    width: min(90vw, 1120px);
+    text-align: center;
+    line-height: 1.24;
+    font-size: clamp(30px, 5.6vw, 70px);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 0 18px;
+  }
+
+  .word {
+    display: inline-block;
+    background: linear-gradient(180deg, #fff0f4 0%, #ffd8e5 28%, #ffb3ca 56%, #ff7a9e 78%, #ff4f78 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 0 12px rgba(255, 225, 236, 0.24),
+      0 0 26px rgba(255, 156, 190, 0.16),
+      0 0 40px rgba(255, 90, 128, 0.10);
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(10px) scale(0.985);
+    animation: centerWord 2.2s ease forwards;
+    will-change: opacity, transform, filter;
+  }
+
+  @keyframes centerWord {
+    0% { opacity: 0; filter: blur(7px); transform: translateY(10px) scale(0.985); }
+    18% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    68% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    100% { opacity: 0; filter: blur(7px); transform: translateY(-10px) scale(1.01); }
+  }
+
+
+  .heart-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 0.42em;
+    min-width: 1.2em;
+    min-height: 1.45em;
+  }
+
+  .heart {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    background: linear-gradient(180deg, #ffe5ec 0%, #ffb7ca 16%, #c51b44 42%, #7d0926 72%, #2f000d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 0 14px rgba(255, 211, 225, 0.26),
+      0 0 30px rgba(151, 8, 40, 0.30),
+      0 0 54px rgba(71, 0, 17, 0.26);
+    animation:
+      heartAppear 2.0s ease forwards,
+      heartPulse 2.6s ease-in-out 2.0s infinite;
+    font-size: 1.08em;
+    line-height: 1;
+    transform-origin: center;
+    will-change: opacity, transform, filter;
+  }
+
+  .blood-drip,
+  .blood-drop {
+    position: absolute;
+    left: 50%;
+    pointer-events: none;
+    transform: translateX(-50%);
+    will-change: transform, opacity, filter;
+  }
+
+  .blood-drip {
+    top: 0.92em;
+    width: 0.10em;
+    height: 0.34em;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(110, 0, 24, 0.0) 0%, rgba(126, 0, 28, 0.66) 22%, rgba(84, 0, 18, 0.92) 100%);
+    box-shadow:
+      0 0 7px rgba(137, 8, 38, 0.20),
+      0 0 12px rgba(69, 0, 13, 0.16);
+    opacity: 0;
+    animation: dripGrow 3.8s ease-in-out 2.3s infinite;
+    z-index: 1;
+  }
+
+  .blood-drip.drip-left {
+    margin-left: -0.19em;
+    height: 0.28em;
+    animation-delay: 2.95s;
+  }
+
+  .blood-drip.drip-right {
+    margin-left: 0.21em;
+    height: 0.40em;
+    animation-delay: 3.35s;
+  }
+
+  .blood-drop {
+    top: 1.23em;
+    width: 0.16em;
+    height: 0.22em;
+    border-radius: 55% 55% 65% 65% / 42% 42% 78% 78%;
+    background: radial-gradient(circle at 38% 26%, rgba(255, 183, 205, 0.72) 0%, rgba(198, 18, 58, 0.96) 38%, rgba(92, 0, 18, 0.98) 100%);
+    filter: drop-shadow(0 0 6px rgba(122, 0, 30, 0.34));
+    opacity: 0;
+    z-index: 1;
+  }
+
+  .blood-drop.drop-main {
+    animation: dropFall 3.8s ease-in-out 2.55s infinite;
+  }
+
+  .blood-drop.drop-left {
+    margin-left: -0.19em;
+    width: 0.13em;
+    height: 0.18em;
+    animation: dropFallSmall 4.1s ease-in-out 3.05s infinite;
+  }
+
+  .blood-drop.drop-right {
+    margin-left: 0.21em;
+    width: 0.14em;
+    height: 0.20em;
+    animation: dropFallSmall 4.0s ease-in-out 3.45s infinite;
+  }
+
+  @keyframes heartAppear {
+    0% { opacity: 0; filter: blur(8px); transform: scale(0.76); }
+    55% { opacity: 1; filter: blur(0); transform: scale(1.07); }
+    100% { opacity: 1; filter: blur(0); transform: scale(1); }
+  }
+
+  @keyframes heartPulse {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.055); }
+    50% { transform: scale(1.085); }
+    70% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes dripGrow {
+    0%, 18% {
+      opacity: 0;
+      transform: translateX(-50%) scaleY(0.2);
+      filter: blur(0.6px);
+    }
+    34%, 56% {
+      opacity: 0.95;
+      transform: translateX(-50%) scaleY(1);
+      filter: blur(0);
+    }
+    78%, 100% {
+      opacity: 0;
+      transform: translateX(-50%) scaleY(0.26);
+      filter: blur(0.7px);
+    }
+  }
+
+  @keyframes dropFall {
+    0%, 20% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-0.04em) scale(0.72);
+      filter: blur(0.5px);
+    }
+    34% {
+      opacity: 0.94;
+      transform: translateX(-50%) translateY(0) scale(1);
+      filter: blur(0);
+    }
+    60% {
+      opacity: 0.9;
+      transform: translateX(-50%) translateY(0.32em) scale(1.02, 1.08);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(0.70em) scale(0.82, 1.18);
+      filter: blur(0.8px);
+    }
+  }
+
+  @keyframes dropFallSmall {
+    0%, 24% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-0.03em) scale(0.7);
+      filter: blur(0.5px);
+    }
+    42% {
+      opacity: 0.76;
+      transform: translateX(-50%) translateY(0) scale(0.96);
+      filter: blur(0);
+    }
+    64% {
+      opacity: 0.64;
+      transform: translateX(-50%) translateY(0.24em) scale(1, 1.05);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(0.52em) scale(0.78, 1.12);
+      filter: blur(0.8px);
+    }
+  }
+
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<canvas id="rain"></canvas>
+<div id="text-layer">
+  <div id="word-box"></div>
+</div>
+
+<script>
+const MESSAGE = 'ты моя маленькая любимая вредина такая нежная как пушистый котенок хаваю тебя';
+
+const starsCanvas = document.getElementById('stars');
+const starsCtx = starsCanvas.getContext('2d', { alpha: true });
+const rainCanvas = document.getElementById('rain');
+const rainCtx = rainCanvas.getContext('2d', { alpha: true });
+const box = document.getElementById('word-box');
+
+const chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*';
+const rainColors = ['#ffd6e0', '#ff8daa', '#d83a5f', '#8f0f2f', '#4a0012'];
+
+const WORD_DELAY = 1900;
+const START_DELAY = 650;
+const TARGET_FPS = 48;
+const STAR_FPS_DIV = 2;
+const RAIN_SPEED_MIN = 0.96;
+const RAIN_SPEED_MAX = 1.46;
+const DENSITY = 1.78;
+
+let width = 0;
+let height = 0;
+let dpr = 1;
+let fontSize = 18;
+let columnStep = 13;
+let streams = [];
+let stars = [];
+let lastFrame = 0;
+let visible = true;
+let atlas = [];
+let starSprites = {};
+let starBackCanvas = null;
+let lastStarTick = -1;
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function randomCharIndex() {
+  return (Math.random() * chars.length) | 0;
+}
+
+function setupCanvas(canvas, ctx) {
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function makeCharSprite(ch, color, glow, size) {
+  const pad = Math.ceil(size * 0.9);
+  const c = document.createElement('canvas');
+  c.width = size + pad * 2;
+  c.height = Math.ceil(size * 1.35) + pad * 2;
+  const ctx = c.getContext('2d');
+  ctx.font = `${size}px monospace`;
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = color;
+  ctx.shadowBlur = glow;
+  ctx.shadowColor = color;
+  ctx.fillText(ch, pad, pad * 0.55);
+  return c;
+}
+
+function buildAtlas() {
+  atlas = rainColors.map((color, idx) => {
+    const glow = idx === 0 ? Math.max(12, fontSize * 0.65) : idx === 1 ? Math.max(8, fontSize * 0.45) : 0;
+    return Array.from(chars, ch => makeCharSprite(ch, color, glow, fontSize));
+  });
+}
+
+function makeStarSprite(size, tint, coreAlpha, glowAlpha) {
+  const c = document.createElement('canvas');
+  const s = Math.ceil(size * 10);
+  c.width = s;
+  c.height = s;
+  const ctx = c.getContext('2d');
+  const cx = s / 2;
+  const cy = s / 2;
+
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, s * 0.48);
+  glow.addColorStop(0, `rgba(${tint}, ${glowAlpha})`);
+  glow.addColorStop(0.28, `rgba(${tint}, ${glowAlpha * 0.48})`);
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, s, s);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.9, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(${tint}, ${coreAlpha})`;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, Math.max(1.1, size * 0.4), 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,250,252,0.95)';
+  ctx.fill();
+
+  return c;
+}
+
+function buildStarSprites() {
+  starSprites = {
+    softPink: makeStarSprite(2.5, '255,206,224', 0.92, 0.34),
+    pearl: makeStarSprite(2.2, '255,240,246', 0.96, 0.28),
+    rose: makeStarSprite(1.9, '255,168,194', 0.84, 0.30),
+    sparkleH: makeStarSprite(1.5, '255,232,240', 0.98, 0.18)
+  };
+}
+
+function createStarField() {
+  const c = document.createElement('canvas');
+  c.width = Math.floor(width * dpr);
+  c.height = Math.floor(height * dpr);
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const bg = ctx.createRadialGradient(width * 0.5, height * 0.45, 0, width * 0.5, height * 0.45, Math.max(width, height) * 0.8);
+  bg.addColorStop(0, 'rgba(40, 0, 14, 0.16)');
+  bg.addColorStop(0.4, 'rgba(14, 0, 6, 0.06)');
+  bg.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  const dustCount = Math.max(220, Math.floor((width * height) / 5200));
+  for (let i = 0; i < dustCount; i++) {
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+    const r = Math.random() < 0.82 ? random(0.45, 1.25) : random(1.25, 2.2);
+    const a = Math.random() < 0.7 ? random(0.18, 0.38) : random(0.38, 0.65);
+    const tint = Math.random() < 0.55 ? `rgba(255,245,248,${a})` : (Math.random() < 0.5 ? `rgba(255,205,220,${a * 0.95})` : `rgba(255,170,195,${a * 0.85})`);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = tint;
+    ctx.fill();
+    if (r > 1.2) {
+      ctx.beginPath();
+      ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = tint.replace(/rgba\(([^,]+),([^,]+),([^,]+),[^)]+\)/, 'rgba($1,$2,$3,' + (a * 0.10).toFixed(3) + ')');
+      ctx.fill();
+    }
+  }
+
+  return c;
+}
+
+function createStream(x, variance = 0) {
+  const speed = random(RAIN_SPEED_MIN, RAIN_SPEED_MAX);
+  return {
+    x: x + variance,
+    y: random(-height, height * 0.12),
+    speed,
+    length: 10 + ((Math.random() * 12) | 0),
+    seed: Math.random() * 500,
+    chars: Array.from({ length: 24 }, randomCharIndex),
+    swapRate: 0.22 + Math.random() * 0.22
+  };
+}
+
+function createStar() {
+  const typeRoll = Math.random();
+  const sprite = typeRoll > 0.66 ? starSprites.softPink : (typeRoll > 0.33 ? starSprites.pearl : starSprites.rose);
+  return {
+    x: Math.random() * width,
+    y: Math.random() * height,
+    sprite,
+    size: random(0.95, 1.6),
+    a: random(0.62, 1),
+    twinkle: random(0.0013, 0.0035),
+    phase: Math.random() * Math.PI * 2,
+    sparkle: Math.random() < 0.22,
+    sparklePhase: Math.random() * Math.PI * 2
+  };
+}
+
+function rebuildScene() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  fontSize = Math.max(15, Math.min(22, Math.round(width / 84)));
+  columnStep = Math.max(11, Math.round(fontSize * 0.76));
+
+  setupCanvas(starsCanvas, starsCtx);
+  setupCanvas(rainCanvas, rainCtx);
+  buildAtlas();
+  buildStarSprites();
+  starBackCanvas = createStarField();
+
+  const columns = Math.ceil(width / columnStep);
+  streams = [];
+  for (let i = 0; i < columns; i++) {
+    const x = i * columnStep;
+    streams.push(createStream(x));
+    streams.push(createStream(x, random(-3.5, 3.5)));
+    if (Math.random() < DENSITY - 1) streams.push(createStream(x, random(-2.2, 2.2)));
+  }
+
+  const starCount = Math.max(320, Math.floor((width * height) / 1800));
+  stars = Array.from({ length: starCount }, createStar);
+}
+
+function drawStars(ts) {
+  const tick = Math.floor(ts / (1000 / (TARGET_FPS / STAR_FPS_DIV)));
+  if (tick === lastStarTick) return;
+  lastStarTick = tick;
+
+  starsCtx.clearRect(0, 0, width, height);
+  starsCtx.drawImage(starBackCanvas, 0, 0, width * dpr, height * dpr, 0, 0, width, height);
+
+  for (let i = 0; i < stars.length; i++) {
+    const s = stars[i];
+    const pulse = 0.58 + 0.42 * Math.sin(ts * s.twinkle + s.phase);
+    const alpha = Math.min(1, s.a * pulse);
+    const sprite = s.sprite;
+    const w = (sprite.width / dpr) * s.size * 0.34;
+    const h = (sprite.height / dpr) * s.size * 0.34;
+
+    starsCtx.globalAlpha = alpha;
+    starsCtx.drawImage(sprite, s.x - w / 2, s.y - h / 2, w, h);
+
+    if (s.sparkle) {
+      const sparklePulse = 0.5 + 0.5 * Math.sin(ts * 0.0046 + s.sparklePhase);
+      if (sparklePulse > 0.68) {
+        const lineAlpha = alpha * (sparklePulse - 0.62) * 2.2;
+        const len = 3.2 + 5.8 * sparklePulse;
+        starsCtx.globalAlpha = Math.min(0.72, lineAlpha);
+        starsCtx.fillStyle = 'rgb(255,236,244)';
+        starsCtx.fillRect(s.x - len, s.y - 0.5, len * 2, 1);
+        starsCtx.fillRect(s.x - 0.5, s.y - len, 1, len * 2);
+      }
+    }
+  }
+
+  starsCtx.globalAlpha = 1;
+}
+
+function updateStreamChars(stream, frameTick) {
+  if ((frameTick * stream.swapRate + stream.seed) % 1 < 0.34) {
+    const idx = ((frameTick + stream.seed) | 0) % stream.chars.length;
+    stream.chars[idx] = randomCharIndex();
+  }
+}
+
+function drawRain(frameTick) {
+  rainCtx.clearRect(0, 0, width, height);
+
+  for (let s = 0; s < streams.length; s++) {
+    const stream = streams[s];
+    updateStreamChars(stream, frameTick);
+
+    for (let i = 0; i < stream.length; i++) {
+      const y = stream.y - i * (fontSize * 0.92);
+      if (y < -fontSize || y > height + fontSize) continue;
+
+      const colorIndex = i < rainColors.length ? i : rainColors.length - 1;
+      const spriteSet = atlas[colorIndex];
+      const sprite = spriteSet[stream.chars[(i + frameTick + s) % stream.chars.length]];
+      const w = sprite.width * 0.58;
+      const h = sprite.height * 0.58;
+      rainCtx.drawImage(sprite, stream.x - (w - fontSize) * 0.35, y - fontSize * 0.24, w, h);
+    }
+
+    stream.y += stream.speed;
+    if (stream.y - stream.length * fontSize > height + 50) {
+      stream.y = -random(fontSize * 2, height * 0.72);
+      stream.speed = random(RAIN_SPEED_MIN, RAIN_SPEED_MAX);
+      stream.length = 10 + ((Math.random() * 12) | 0);
+      stream.seed = Math.random() * 500;
+    }
+  }
+}
+
+function animate(ts) {
+  if (!visible) {
+    requestAnimationFrame(animate);
+    return;
+  }
+
+  if (!lastFrame) lastFrame = ts;
+  const frameInterval = 1000 / TARGET_FPS;
+  const delta = ts - lastFrame;
+  if (delta >= frameInterval) {
+    lastFrame = ts - (delta % frameInterval);
+    const frameTick = Math.floor(ts / frameInterval);
+    drawStars(ts);
+    drawRain(frameTick);
+  }
+  requestAnimationFrame(animate);
+}
+
+function showWords() {
+  const words = MESSAGE.split(/\s+/).filter(Boolean);
+  let i = 0;
+
+  function next() {
+    if (i >= words.length) {
+      box.innerHTML = `
+        <span class="heart-wrap">
+          <span class="heart">❤</span>
+          <span class="blood-drip drip-left"></span>
+          <span class="blood-drip drip-right"></span>
+          <span class="blood-drop drop-left"></span>
+          <span class="blood-drop drop-main"></span>
+          <span class="blood-drop drop-right"></span>
+        </span>`;
+      return;
+    }
+    box.innerHTML = `<span class="word">${words[i]}</span>`;
+    i++;
+    setTimeout(next, WORD_DELAY);
+  }
+
+  setTimeout(next, START_DELAY);
+}
+
+rebuildScene();
+window.addEventListener('resize', rebuildScene, { passive: true });
+document.addEventListener('visibilitychange', () => {
+  visible = !document.hidden;
+  if (visible) lastFrame = 0;
+});
+requestAnimationFrame(animate);
+showWords();
+</script>
+</body>
+</html>
